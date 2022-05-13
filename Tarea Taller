@@ -1,0 +1,115 @@
+				; Instituto Tecnologico De Costa Rica
+				;Estudiante: Freddy Armando Fallas Garro
+				;Carnet: 2019226675	
+				;Curso: Taller De Diseño Digital
+				;Profesor: Jason Leiton Jimenez
+
+				;Palabra	a analizar: rayar
+				;rayar	en ascii es: 114 97 121 97 114
+__main
+				
+MAIN				B		inicio
+				
+				
+inicio
+				
+				mov		r0, #0x150
+				mov		r1, #0x170
+				mov		r2, #0x100
+				BEQ		Almacenar_Palabra
+				
+Almacenar_Palabra
+				
+				mov		r3, #114	;Almacenamos la r
+				str		r3,[r1]
+				
+				mov		r3, #97 ; Almacenamos la a
+				add		r1,r1,#4
+				str		r3,[r1]
+				
+				mov		r3, #121 ; Almacenamos la y
+				add		r1,r1,#4
+				str		r3,[r1]
+				
+				mov		r3, #97 ; Almacenamos la a
+				add		r1,r1,#4
+				str		r3,[r1]
+				
+				mov		r3, #114 ; Almacenamos la r
+				add		r1,r1,#4
+				str		r3,[r1]
+				
+				BEQ		Almacenar_Tamano
+				
+				
+Almacenar_Tamano
+				
+				mov		r3, #5		;Almacenamos el tamaño
+				str		r3,[r0]
+				
+				mov		r3,#1		;contador para ubicar los punteros en cada extremo
+				
+				BEQ		iniciar_puntero1
+				
+iniciar_puntero1
+				
+				mov		r4,r1 ;R4 será el primer puntero
+				mov		r5,r1	;r5 será el segundo puntero, debemos posicionarlo
+				add		r4,r4,#4
+				BEQ		iniciar_puntero2
+				
+				
+iniciar_puntero2
+				
+				
+				
+				sub		r5,r5,#4		;restamos 4 a la dirección hasta ubicarlo en la posición inicial de la cadena
+				add		r3,r3,#1
+				ldr		r6,[r0]
+				cmp		r3,r6
+				bne		iniciar_puntero2
+				sub		r5,r5,#4
+				ldr		r3,[r0]		;r3 funcionará de nuevo como contador para saber cuando ya analizamos toda la cadena
+				beq		analizar_palindromo
+				
+analizar_palindromo
+				
+				add		r5,r5,#4
+				sub		r4,r4,#4
+				ldr		r6,[r5]
+				ldr		r7,[r4]
+				cmp		r6,r7	;Comparamos los valores 
+				bne		no_es_palindromo
+				beq		verificar_fin_impar
+				
+				
+verificar_fin_impar	;Acá diferenciamos porque el largo de la cadena podría ser impar
+				sub		r3,r3,#2	
+				mov		r9,#1
+				cmp		r3,r9
+				bne		verificar_fin_par
+				beq		es_palindromo
+				
+				
+				
+verificar_fin_par	;Acá diferenciamos porque el largo de la cadena podria ser par
+				mov		r9,#0
+				cmp		r3,r9
+				bne		analizar_palindromo
+				beq		es_palindromo
+				
+no_es_palindromo	
+				
+				mov		r8,#0x10	;Asignamos en memoria si no fuera palindromo
+				str		r8,[r2]
+				
+				
+es_palindromo
+				
+				mov		r8,#0xff	;Asignamos en memoria si es palindromo
+				str		r8,[r2]
+				
+				
+				
+				
+				
